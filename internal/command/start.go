@@ -26,6 +26,10 @@ var startCmd = &cobra.Command{
 			runPhase("rest", plan.Rest)
 
 			fmt.Println()
+
+			if rep < plan.Reps {
+				fmt.Printf("\033[2A")
+			}
 		}
 
 		fmt.Printf("\nDone! Great work.\n")
