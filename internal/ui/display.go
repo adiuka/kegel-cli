@@ -89,3 +89,17 @@ func PrintPlanSummary(reps int, squeeze, rest time.Duration) {
 	bold.Printf("  Total    ")
 	gray.Printf("~%.0f seconds\n\n", float64(reps)*(squeeze.Seconds()+rest.Seconds()))
 }
+
+func WaitForEnter() {
+	bold := color.New(color.Bold)
+	bold.Println("  Press Enter to begin...")
+}
+
+func PrintComplete() {
+	green := color.New(color.FgGreen, color.Bold)
+	gray := color.New(color.FgHiBlack)
+	fmt.Println()
+	green.Println("  ✓  Workout complete!")
+	gray.Println("  Consistency is everything - see you next time!")
+	fmt.Println()
+}

@@ -18,6 +18,9 @@ var startCmd = &cobra.Command{
 
 		ui.PrintBanner()
 		ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest)
+		ui.WaitForEnter()
+
+		fmt.Scanln()
 
 		for rep := 1; rep <= plan.Reps; rep++ {
 			fmt.Printf("	 Rep %d/%d\n", rep, plan.Reps)
@@ -32,7 +35,7 @@ var startCmd = &cobra.Command{
 			}
 		}
 
-		fmt.Printf("\nDone! Great work.\n")
+		ui.PrintComplete()
 	},
 }
 
