@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 )
@@ -27,7 +28,7 @@ func RenderBar(phase string, elapsed, total float64) {
 		remaining = 0
 	}
 
-	fmt.Printf("\r\033[K  %s  %s  %.0fs", phaseLabel(phase), bar, remaining)
+	fmt.Printf("\r\033[K%s  %s  %.0fs", phaseLabel(phase), bar, remaining)
 }
 
 func buildBar(filled, empty int, phase string) string {
@@ -51,7 +52,40 @@ func phaseLabel(phase string) string {
 	case "squeeze":
 		return yellow.Sprint("SQUEEZE")
 	case "rest":
-		return green.Sprint("REST		")
+		return green.Sprint("REST   ")
 	}
 	return phase
+}
+
+func PrintBanner() {
+	cyan := color.New(color.FgCyan, color.Bold)
+	fmt.Printf("\n")
+	cyan.Println("  ███████╗██╗     ██╗        ██╗  ██╗███████╗ ██████╗ ███████╗██╗")
+  cyan.Println("  ██╔════╝██║     ██║        ██║ ██╔╝██╔════╝██╔════╝ ██╔════╝██║")
+  cyan.Println("  ██║     ██║     ██║ █████╗ █████╔╝ █████╗  ██║  ███╗█████╗  ██║")
+  cyan.Println("  ██║     ██║     ██║ ╚════╝ ██╔═██╗ ██╔══╝  ██║   ██║██╔══╝  ██║")
+  cyan.Println("  ███████╗███████╗██║        ██║  ██╗███████╗╚██████╔╝███████╗███████╗")
+  cyan.Println("  ╚══════╝╚══════╝╚═╝        ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝╚══════╝")
+  fmt.Println()
+  cyan.Println("  ████████╗██████╗  █████╗ ██╗███╗   ██╗███████╗██████╗")
+  cyan.Println("     ██╔══╝██╔══██╗██╔══██╗██║████╗  ██║██╔════╝██╔══██╗")
+  cyan.Println("     ██║   ██████╔╝███████║██║██╔██╗ ██║█████╗  ██████╔╝")
+  cyan.Println("     ██║   ██╔══██╗██╔══██║██║██║╚██╗██║██╔══╝  ██╔══██╗")
+  cyan.Println("     ██║   ██║  ██║██║  ██║██║██║ ╚████║███████╗██║  ██║")
+  cyan.Println("     ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝")
+	fmt.Println()
+}
+
+func PrintPlanSummary(reps int, squeeze, rest time.Duration) {
+	gray := color.New(color.FgHiBlack)
+	bold := color.New(color.Bold)
+
+	bold.Printf("  Reps     ")
+	gray.Printf("%d\n", reps)
+	bold.Printf("  Squeeze  ")
+	gray.Printf("%0f\n", squeeze.Seconds())
+	bold.Printf("  Rest     ")
+	gray.Printf("%0f\n", rest.Seconds())
+	bold.Printf("  Total    ")
+	gray.Printf("~%.0f seconds\n\n", float64(reps)*(squeeze.Seconds()+rest.Seconds()))
 }
