@@ -103,3 +103,11 @@ func PrintComplete() {
 	gray.Println("  Consistency is everything - see you next time!")
 	fmt.Println()
 }
+
+func PrintDescription() {
+	yellow := color.New(color.FgYellow)
+	fmt.Printf("\n")
+	yellow.Println("╔═══════╗")
+	yellow.Println("║       ║")
+	yellow.Println("╚═══════╝")
+}
