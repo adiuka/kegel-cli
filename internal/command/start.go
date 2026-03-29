@@ -16,22 +16,26 @@ var startCmd = &cobra.Command{
 	Run:	func(cmd *cobra.Command, args []string) {
 		plan := workout.Default
 
-		fmt.Printf("Starting session: %d reps, %.0fs squeeze, %.0fs rest\n\n",
-			plan.Reps,
-			plan.Squeeze.Seconds(),
-			plan.Rest.Seconds(),
-		)
+		ui.PrintBanner()
+		ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest)
+		ui.WaitForEnter()
+
+		fmt.Scanln()
 
 		for rep := 1; rep <= plan.Reps; rep++ {
-			fmt.Printf("	Rep %d/%d\n", rep, plan.Reps)
+			fmt.Printf("	 Rep %d/%d\n", rep, plan.Reps)
 			runPhase("squeeze", plan.Squeeze)
 
 			runPhase("rest", plan.Rest)
 
 			fmt.Println()
+
+			if rep < plan.Reps {
+				fmt.Printf("\033[2A")
+			}
 		}
 
-		fmt.Printf("\nDone! Great work.\n")
+		ui.PrintComplete()
 	},
 }
 
