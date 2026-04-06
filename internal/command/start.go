@@ -17,6 +17,7 @@ var startCmd = &cobra.Command{
 		plan := workout.Default
 
 		ui.PrintBanner()
+		ui.PrintDescription()
 		ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest)
 		ui.WaitForEnter()
 
