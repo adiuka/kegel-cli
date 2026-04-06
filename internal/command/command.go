@@ -15,21 +15,21 @@ var rootCmd = &cobra.Command{
 	RunE:		func(cmd *cobra.Command, args []string) error {
 		ui.PrintBanner()
 
-		choice, err := ui.ShowMenu()
-		if err != nil {
-			return nil
-		}
+		for {
+			choice, err := ui.ShowMenu()
+			if err != nil {
+				return nil
+			}
 
-		switch choice {
-		case ui.MenuTrain:
-			return startCmd.RunE(cmd, args)
-		case ui.MenuProgress:
-			fmt.Println("\n Coming soon!")
-		case ui.MenuInfo:
-			return infoCmd.RunE(cmd, args)
+			switch choice {
+			case ui.MenuTrain:
+				return runWorkout()
+			case ui.MenuProgress:
+				fmt.Println("\n Coming soon!")
+			case ui.MenuInfo:
+				runInfo()
+			}
 		}
-
-		return nil
 	},
 }
 
