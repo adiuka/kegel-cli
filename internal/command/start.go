@@ -13,11 +13,29 @@ import (
 var startCmd = &cobra.Command{
 	Use:		"start",
 	Short:	"Start a Kegel training session",
-	Run:	func(cmd *cobra.Command, args []string) {
-		plan := workout.Default
+	RunE:	func(cmd *cobra.Command, args []string) error {
+		return runWorkout()
+	},
+}
 
-		ui.PrintBanner()
-		ui.PrintDescription()
+func runPhase(phase string, duration time.Duration) {
+	start := time.Now()
+	ticker := time.NewTicker(50 * time.Millisecond)
+	defer ticker.Stop()
+
+	for range ticker.C {
+		elapsed := time.Since(start).Seconds()
+		ui.RenderBar(phase, elapsed, duration.Seconds())
+
+		if elapsed >= duration.Seconds() {
+			break
+		}
+	}
+}
+
+func runWorkout() error {
+	plan := workout.Default
+
 		ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest)
 		ui.WaitForEnter()
 
@@ -37,22 +55,7 @@ var startCmd = &cobra.Command{
 		}
 
 		ui.PrintComplete()
-	},
-}
-
-func runPhase(phase string, duration time.Duration) {
-	start := time.Now()
-	ticker := time.NewTicker(50 * time.Millisecond)
-	defer ticker.Stop()
-
-	for range ticker.C {
-		elapsed := time.Since(start).Seconds()
-		ui.RenderBar(phase, elapsed, duration.Seconds())
-
-		if elapsed >= duration.Seconds() {
-			break
-		}
-	}
+		return nil
 }
 
 func init() {
