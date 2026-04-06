@@ -13,11 +13,9 @@ import (
 var startCmd = &cobra.Command{
 	Use:		"start",
 	Short:	"Start a Kegel training session",
-	Run:	func(cmd *cobra.Command, args []string) {
+	RunE:	func(cmd *cobra.Command, args []string) error {
 		plan := workout.Default
 
-		ui.PrintBanner()
-		ui.PrintDescription()
 		ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest)
 		ui.WaitForEnter()
 
@@ -37,6 +35,7 @@ var startCmd = &cobra.Command{
 		}
 
 		ui.PrintComplete()
+		return nil
 	},
 }
 
