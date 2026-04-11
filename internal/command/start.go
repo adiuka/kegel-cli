@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"kegel-cli/internal/progress"
 	"kegel-cli/internal/ui"
 	"kegel-cli/internal/workout"
 
@@ -34,28 +35,37 @@ func runPhase(phase string, duration time.Duration) {
 }
 
 func runWorkout() error {
-	plan := workout.Default
+	store, err := progress.Load()
+	if err != nil {
+		return err
+	}
 
-		ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest)
-		ui.WaitForEnter()
+	plan := workout.ForLevel(store.CurrentLevel)
 
-		fmt.Scanln()
+	ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest, plan.Name, store.SessionsAtCurrentLevel(), 10)
+	ui.WaitForEnter()
+	fmt.Scanln()
 
-		for rep := 1; rep <= plan.Reps; rep++ {
-			fmt.Printf("	 Rep %d/%d\n", rep, plan.Reps)
-			runPhase("squeeze", plan.Squeeze)
-
-			runPhase("rest", plan.Rest)
-
-			fmt.Println()
-
-			if rep < plan.Reps {
-				fmt.Printf("\033[2A")
-			}
+	for rep := 1; rep <= plan.Reps; rep++ {
+		fmt.Printf("	 Rep %d/%d\n", rep, plan.Reps)
+		runPhase("squeeze", plan.Squeeze)
+		runPhase("rest", plan.Rest)
+		fmt.Println()
+		if rep < plan.Reps {
+			fmt.Printf("\033[2A")
 		}
+	}
+	
+	ui.PrintComplete()
 
-		ui.PrintComplete()
-		return nil
+	store.AddSession(store.CurrentLevel, plan.Reps, int(plan.Squeeze.Seconds()), int(plan.Rest.Seconds()))
+
+	if store.ShouldAdvance(10) {
+		store.CurrentLevel ++
+		ui.PrintLevelUp(workout.ForLevel(store.CurrentLevel))
+	}
+
+	return progress.Save(store)
 }
 
 func init() {

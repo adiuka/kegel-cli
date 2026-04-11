@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"kegel-cli/internal/workout"
 	"math"
 	"strings"
 	"time"
@@ -76,10 +77,15 @@ func PrintBanner() {
 	fmt.Println()
 }
 
-func PrintPlanSummary(reps int, squeeze, rest time.Duration) {
+func PrintPlanSummary(reps int, squeeze, rest time.Duration, levelName string, sessionsAtLevel, sessionsRequired int) {
 	gray := color.New(color.FgHiBlack)
 	bold := color.New(color.Bold)
+	cyan := color.New(color.FgCyan, color.Bold)
 
+	cyan.Printf("	Level		")
+	gray.Printf("%s\n", levelName)
+	bold.Printf("  Progress ")
+	gray.Printf("%d/%d sessions to next level\n", sessionsAtLevel, sessionsRequired)
 	bold.Printf("  Reps     ")
 	gray.Printf("%d\n", reps)
 	bold.Printf("  Squeeze  ")
@@ -132,4 +138,18 @@ func PrintDescription() {
 	yellow.Println("║                                                                                        ║")
 	yellow.Println("║ Enjoy and happy training!                                                              ║")
 	yellow.Println("╚════════════════════════════════════════════════════════════════════════════════════════╝")
+}
+
+func PrintLevelUp(plan workout.Plan) {
+	cyan := color.New(color.FgCyan, color.Bold)
+	gray := color.New(color.FgHiBlack)
+
+	fmt.Println()
+	cyan.Println("  ★  Level up! You've unlocked the next level.")
+    gray.Printf("  Next session: %s — %d reps, %.0fs squeeze, %.0fs rest\n\n",
+        plan.Name,
+        plan.Reps,
+        plan.Squeeze.Seconds(),
+        plan.Rest.Seconds(),
+    )
 }
