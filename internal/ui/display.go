@@ -77,10 +77,15 @@ func PrintBanner() {
 	fmt.Println()
 }
 
-func PrintPlanSummary(reps int, squeeze, rest time.Duration) {
+func PrintPlanSummary(reps int, squeeze, rest time.Duration, levelName string, sessionsAtLevel, sessionsRequired int) {
 	gray := color.New(color.FgHiBlack)
 	bold := color.New(color.Bold)
+	cyan := color.New(color.FgCyan, color.Bold)
 
+	cyan.Printf("	Level		")
+	gray.Printf("%s\n", levelName)
+	bold.Printf("  Progress ")
+	gray.Printf("%d/%d sessions to next level\n", sessionsAtLevel, sessionsRequired)
 	bold.Printf("  Reps     ")
 	gray.Printf("%d\n", reps)
 	bold.Printf("  Squeeze  ")

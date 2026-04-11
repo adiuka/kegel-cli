@@ -42,7 +42,7 @@ func runWorkout() error {
 
 	plan := workout.ForLevel(store.CurrentLevel)
 
-	ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest)
+	ui.PrintPlanSummary(plan.Reps, plan.Squeeze, plan.Rest, plan.Name, store.SessionsAtCurrentLevel(), 10)
 	ui.WaitForEnter()
 	fmt.Scanln()
 
